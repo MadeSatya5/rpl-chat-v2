@@ -1,9 +1,20 @@
 "use client";
 
-import { Button, Field, Heading, Input, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  Field,
+  Heading,
+  Input,
+  Link as ChakraLink,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useForm } from "react-hook-form";
 import { LoginProps } from "@/types/form";
+import { useLogin } from "@/hooks/auth";
+import ClipLoader from "react-spinners/ClipLoader";
+import NextLink from "next/link";
 
 function Login() {
   const {
@@ -12,8 +23,12 @@ function Login() {
     formState: { errors },
   } = useForm<LoginProps>();
 
-  const onSubmit = handleSubmit((data) => console.log(data));
-  
+  const { login, isLoadingLogin } = useLogin();
+
+  const onSubmit = handleSubmit(async (data) => {
+    login(data);
+  });
+
   return (
     <form
       onSubmit={onSubmit}
@@ -28,21 +43,21 @@ function Login() {
         borderRadius="xl"
       >
         <Heading size="3xl">Login</Heading>
-        <Field.Root invalid={!!errors.email} width="400px" required>
+        <Field.Root invalid={!!errors.username} width="400px" required>
           <Field.Label>
-            Email <Field.RequiredIndicator />
+            Username <Field.RequiredIndicator />
           </Field.Label>
           <Input
-            {...register("email", {
+            {...register("username", {
               pattern: {
-                value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                message: "Please Enter a Valid Email",
+                value: /^.{6,}$/,
+                message: "Username must be at leat 6 characters",
               },
             })}
             variant="subtle"
             color="black"
           />
-          <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+          <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.password} width="400px" required>
@@ -60,10 +75,15 @@ function Login() {
             color="black"
           />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+          <Text>
+            Don&apos;t have an acoount? Register{" "}
+            <ChakraLink color="blue.500" textDecoration="underline">
+              <NextLink href="/register">here</NextLink>
+            </ChakraLink>
+          </Text>
         </Field.Root>
-
         <Button type="submit" width="full" backgroundColor="blue">
-          Submit
+          {isLoadingLogin ? <ClipLoader color="white" size={25} /> : "Login"}
         </Button>
       </Stack>
     </form>

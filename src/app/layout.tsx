@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import "../styles/globals.css";
 import { Provider } from "@/components/ui/provider";
 
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en" >
       <body>
+        <Toaster />
         <Provider>{children}</Provider>
       </body>
     </html>

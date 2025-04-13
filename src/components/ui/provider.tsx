@@ -13,7 +13,7 @@ export function Provider({ children }: Props) {
   return (
     <ChakraProvider value={defaultSystem}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {children}  {/* Pastikan children diteruskan */}
+        {children} 
       </ThemeProvider>
     </ChakraProvider>
   );
