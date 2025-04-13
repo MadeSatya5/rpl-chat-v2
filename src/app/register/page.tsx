@@ -23,16 +23,14 @@ function Register() {
     formState: { errors },
   } = useForm<RegisterProps>();
 
-  const {checkUsername, isLoadingCheckUsername, responseStatusCheckUsername} = useCheckUsername();
+  const {checkUsername, isLoadingCheckUsername} = useCheckUsername();
 
   const {registerAccount} = useRegister();
 
   const onSubmit = handleSubmit(async (data) => {
-    checkUsername(data);
+    const sucess = await checkUsername(data);
 
-    if(responseStatusCheckUsername){
-      console.log("yey");
-
+    if(sucess){
       registerAccount(data);
     }
   });

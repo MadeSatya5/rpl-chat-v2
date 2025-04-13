@@ -18,7 +18,7 @@ export const useLogin = () => {
       setIsErrorLogin(false);
 
       const res = await axios.post<LoginResponse>(
-        `${process.env.BASE_URL}/api/user/login`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/login`,
         {
           username: data.username,
           password: data.password,
@@ -47,34 +47,32 @@ export const useLogin = () => {
 export const useCheckUsername = () => {
     const [isLoadingCheckUsername, setIsLoadingCheckUsername] = useState(false);
 
-    let responseStatusCheckUsername = false;
-
     const checkUsername = async (data: CheckUsernameProps) => {
       try {
         setIsLoadingCheckUsername(true);
 
-        const res = await axios.post<CheckUsernameResponse>(`${process.env.BASE_URL}/api/user/check-username`, {
+        const res = await axios.post<CheckUsernameResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/check-username`, {
           username: data.username
         })
 
         console.log(res.data)
 
-        responseStatusCheckUsername = res.data.status === true;
-
-        if(!responseStatusCheckUsername) {
-          toast.error("Username Already Exist!!");
-        } 
+        return true;
         
       } catch (error){
         console.error(error);
-        toast.error("Unable to Register!!")
+        toast.error("Username Already Exist!!")
+
+        return false;
 
       } finally {
         setIsLoadingCheckUsername(false);
+
+        return true;
       }
     }
 
-    return {checkUsername, isLoadingCheckUsername, responseStatusCheckUsername}
+    return {checkUsername, isLoadingCheckUsername}
 }
 
 
@@ -84,7 +82,7 @@ export const useRegister = () => {
   const registerAccount = async (data: RegisterProps) => {
 
     try{
-      const res = await axios.post<RegisterResponse>(`${process.env.BASE_URL}/api/user/register`, {
+      const res = await axios.post<RegisterResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/register`, {
         name: data.name,
         username: data.username,
         password: data.password,

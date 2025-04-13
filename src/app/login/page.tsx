@@ -76,7 +76,7 @@ function Login() {
           />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
           <Text>
-            Don&apos;t have an acoount? Register{" "}
+            Don&apos;t have an account? Register{" "}
             <ChakraLink color="blue.500" textDecoration="underline">
               <NextLink href="/register">here</NextLink>
             </ChakraLink>
