@@ -13,3 +13,8 @@ export interface ShowProfileResponse {
     image_url: string  | undefined;
   };
 }
+
+export interface AvatarProfileProps {
+  username: string | undefined,
+  image_url: string | undefined,
+}
