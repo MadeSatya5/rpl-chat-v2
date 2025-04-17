@@ -11,7 +11,6 @@ export interface LoginResponse {
   };
 }
 
-
 export interface CheckUsernameProps {
   username: string,
 }
