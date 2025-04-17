@@ -25,7 +25,7 @@ export const useLogin = () => {
         }
       );
       console.log(res.data);
-      setCookie("acessToken", res.data.data.token);
+      setCookie("accessToken", res.data.data.token);
       setCookie("username", data.username);
 
       toast.success("Logged in Sucessfully!!");

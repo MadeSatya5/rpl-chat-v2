@@ -19,7 +19,7 @@ import { useProfile } from "@/hooks/profile";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ShowProfileResponse } from "@/types/profile";
-import { FadeLoader } from "react-spinners";
+import { MoonLoader } from "react-spinners";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,8 +27,8 @@ function Home() {
     ShowProfileResponse | null | undefined
   >(null);
 
-  const acessToken = getCookie("acessToken");
-  console.log(acessToken);
+  // const acessToken = getCookie("acessToken");
+  // console.log(acessToken);
 
   const usernameFromCookie = getCookie("username");
   const username: string =
@@ -54,7 +54,7 @@ function Home() {
     <>
       {isLoading ? (
         <HStack justify="center" align="center" minH="100vh">
-          <FadeLoader color="white" />
+          <MoonLoader color="white" />
         </HStack>
       ) : (
         <HStack maxW="1250px" mx="auto" py="20px">
