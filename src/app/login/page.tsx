@@ -14,8 +14,8 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useForm } from "react-hook-form";
 import { LoginProps } from "@/types/form";
 import { useLogin } from "@/hooks/auth";
-import ClipLoader from "react-spinners/ClipLoader";
 import NextLink from "next/link";
+import Loader from "@/components/ui/Loader";
 
 function Login() {
   const {
@@ -71,7 +71,7 @@ function Login() {
             </Text>
           </Field.Root>
           <Button type="submit" width="full" backgroundColor="blue">
-            {isLoadingLogin ? <ClipLoader color="white" size={25} /> : "Login"}
+            {isLoadingLogin ? <Loader /> : "Login"}
           </Button>
         </Stack>
       </form>

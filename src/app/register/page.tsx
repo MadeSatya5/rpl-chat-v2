@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/ui/Loader";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useCheckUsername, useRegister } from "@/hooks/auth";
 import { RegisterProps } from "@/types/form";
@@ -15,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useForm } from "react-hook-form";
-import { ClipLoader } from "react-spinners";
 
 function Register() {
   const {
@@ -109,7 +109,7 @@ function Register() {
           </Field.Root>
           <Button type="submit" width="full" backgroundColor="blue">
             {isLoadingCheckUsername ? (
-              <ClipLoader color="white" size={25} />
+              <Loader />
             ) : (
               "Register"
             )}

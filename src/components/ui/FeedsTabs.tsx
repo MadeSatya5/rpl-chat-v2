@@ -2,7 +2,15 @@ import { HStack, Text } from "@chakra-ui/react";
 
 function FeedsTabs() {
   return (
-    <HStack justify="center" borderColor="gray.600" pb="2">
+    <HStack
+      justify="center"
+      borderColor="gray.600"
+      pb="2"
+      position="sticky"
+      top="0"
+      bgColor="black"
+      zIndex={1000}
+    >
       <Text
         fontWeight="bold"
         px={4}

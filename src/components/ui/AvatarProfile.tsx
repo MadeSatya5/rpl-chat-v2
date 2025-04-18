@@ -1,5 +1,9 @@
-import { AvatarProfileProps } from "@/types/profile";
 import { Avatar } from "@chakra-ui/react";
+
+export interface AvatarProfileProps {
+  username: string | undefined;
+  image_url: string | undefined;
+}
 
 function AvatarProfile(data: AvatarProfileProps) {
   return (

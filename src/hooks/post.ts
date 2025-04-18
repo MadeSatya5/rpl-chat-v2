@@ -36,18 +36,38 @@ export const useCreatePost = () => {
 };
 
 export const useGetPost = () => {
-  const getPost = async () => {
+  const getPost = async (page: number) => {
     try {
       const res = await axios.get<GetPostResponse>(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/post?page=1&per_page=10`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post?page=${page}&per_page=10`
       );
-      console.log(res);
+      // console.log(res.data);
       return res;
-
     } catch (error) {
       console.log(error);
     }
   };
 
-  return { getPost }
+  return { getPost };
+};
+
+export const useDeletePost = () => {
+  const deletePost = async (id: number) => {
+    try {
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return { deletePost };
 };
