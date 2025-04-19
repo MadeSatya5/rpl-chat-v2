@@ -1,6 +1,6 @@
 "use client";
 
-import Loader from "@/components/ui/Loader";
+import LoaderButton from "@/components/ui/LoaderButton";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useCheckUsername, useRegister } from "@/hooks/auth";
 import { RegisterProps } from "@/types/form";
@@ -108,11 +108,7 @@ function Register() {
             </Text>
           </Field.Root>
           <Button type="submit" width="full" backgroundColor="blue">
-            {isLoadingCheckUsername ? (
-              <Loader />
-            ) : (
-              "Register"
-            )}
+            {isLoadingCheckUsername ? <LoaderButton /> : "Register"}
           </Button>
         </Stack>
       </form>

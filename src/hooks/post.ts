@@ -1,6 +1,8 @@
 import {
   CreatePostProps,
   CreatePostResponse,
+  EditPostProps,
+  GetPostByIdResponse,
   GetPostResponse,
 } from "@/types/post";
 import axios from "axios";
@@ -16,7 +18,7 @@ export const useCreatePost = () => {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/post`,
         {
           text: data.text,
-          //   parent_id:
+          parent_id: data.parent_id,
         },
         {
           headers: {
@@ -41,7 +43,6 @@ export const useGetPost = () => {
       const res = await axios.get<GetPostResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/post?page=${page}&per_page=10`
       );
-      // console.log(res.data);
       return res;
     } catch (error) {
       console.log(error);
@@ -51,11 +52,27 @@ export const useGetPost = () => {
   return { getPost };
 };
 
+
+export const useGetPostById = () => {
+  const getPostById = async (postId: number, page = 1, perPage = 10) => {
+    try {
+      const res = await axios.get<GetPostByIdResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${postId}?page=${page}&per_page=${perPage}`
+      );
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return { getPostById };
+};
+
 export const useDeletePost = () => {
-  const deletePost = async (id: number) => {
+  const deletePost = async (id: number | undefined) => {
     try {
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${id}`, 
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -71,3 +88,65 @@ export const useDeletePost = () => {
   };
   return { deletePost };
 };
+
+export const useEditPost = () => {
+  const editPost = async ({id, text}: EditPostProps) => {
+    try {
+
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${id}`,
+        {
+          text: text,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return { editPost };
+};
+
+export const useLikePost = () => {
+  const likePost = async(id: number | undefined) => {
+    try {
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/likes/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      ) 
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  return { likePost }
+}
+
+export const useUnlikePost = () => {
+  const unlikePost = async(id: number | undefined) => {
+    try {
+      const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/api/likes/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      ) 
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  return { unlikePost }
+}

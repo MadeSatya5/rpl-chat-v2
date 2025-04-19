@@ -1,7 +1,7 @@
 import { ClipLoader } from "react-spinners";
 
-function Loader() {
+function LoaderButton() {
   return <ClipLoader color="white" size={25} />;
 }
 
-export default Loader;
+export default LoaderButton;

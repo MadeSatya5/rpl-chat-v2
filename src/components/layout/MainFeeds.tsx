@@ -7,7 +7,7 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useGetPost } from "@/hooks/post";
 import { useEffect } from "react";
-import Loader from "../ui/Loader";
+import LoaderButton from "../ui/LoaderButton";
 
 interface MainFeedsProps {
   profileData: ShowProfileResponse | null | undefined;
@@ -68,6 +68,7 @@ function MainFeeds({ profileData }: MainFeedsProps) {
                 username={post.user.username}
                 text={post.text}
                 image_url={post.user.image_url}
+                total_likes={post.total_likes}
               />
             ) : null
           )
@@ -78,7 +79,7 @@ function MainFeeds({ profileData }: MainFeedsProps) {
         {isFetchingNextPage ? (
           <>
             <Center p={50}>
-              <Loader />
+              <LoaderButton />
             </Center>
           </>
         ) : null}

@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { LoginProps } from "@/types/form";
 import { useLogin } from "@/hooks/auth";
 import NextLink from "next/link";
-import Loader from "@/components/ui/Loader";
+import LoaderButton from "@/components/ui/LoaderButton";
 
 function Login() {
   const {
@@ -71,7 +71,7 @@ function Login() {
             </Text>
           </Field.Root>
           <Button type="submit" width="full" backgroundColor="blue">
-            {isLoadingLogin ? <Loader /> : "Login"}
+            {isLoadingLogin ? <LoaderButton /> : "Login"}
           </Button>
         </Stack>
       </form>

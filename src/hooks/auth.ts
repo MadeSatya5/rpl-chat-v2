@@ -2,7 +2,7 @@ import axios from "axios";
 import { CheckUsernameProps, CheckUsernameResponse, LoginProps, RegisterProps, RegisterResponse } from "@/types/form";
 import { LoginResponse } from "@/types/form";
 import { useState } from "react";
-import { setCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -99,4 +99,14 @@ export const useRegister = () => {
     
   }
   return {registerAccount}
+}
+
+export const useLogOut = () => {
+  const router = useRouter();
+
+  deleteCookie("accessToken");
+  deleteCookie("username");
+  
+  router.push("/login");
+
 }

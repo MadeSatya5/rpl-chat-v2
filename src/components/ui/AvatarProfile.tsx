@@ -1,15 +1,16 @@
 import { Avatar } from "@chakra-ui/react";
 
 export interface AvatarProfileProps {
-  username: string | undefined;
-  image_url: string | undefined;
+  username?: string;
+  image_url?: string;
+  size?: 'full' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl', 
 }
 
-function AvatarProfile(data: AvatarProfileProps) {
+function AvatarProfile({ username, image_url, size = "md" }: AvatarProfileProps) {
   return (
-    <Avatar.Root>
-      <Avatar.Fallback name={data.username} />
-      <Avatar.Image src={data?.image_url} />
+    <Avatar.Root alignSelf="start" size={size}>
+      <Avatar.Fallback name={username} />
+      <Avatar.Image src={`https://tugas2-fe.labse.id/assets/${image_url}`} />
     </Avatar.Root>
   );
 }
