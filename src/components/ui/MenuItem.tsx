@@ -1,5 +1,11 @@
 import { HStack, Icon, Text } from "@chakra-ui/react";
-import { MenuItemProps } from "@/types/menu";
+import { IconType } from "react-icons/lib";
+interface MenuItemProps {
+    icon: IconType,
+    label: string,
+    width?: string,
+    bgColor?: string,
+}
 
 function MenuItem({ icon, label, width, bgColor }: MenuItemProps) {
   return (
