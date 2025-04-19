@@ -9,40 +9,50 @@ import {
 } from "@chakra-ui/react";
 import AvatarProfile from "../ui/AvatarProfile";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDeletePost, useEditPost, useLikePost } from "@/hooks/post";
+import {
+  useDeletePost,
+  useEditPost,
+  useLikePost,
+  useUnlikePost,
+} from "@/hooks/post";
 import Loader from "../ui/LoaderButton";
 import { useState } from "react";
 import { EditPostProps } from "@/types/post";
-import { FaEdit, FaRegHeart } from "react-icons/fa";
+import { FaEdit, FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdComment, MdDelete } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import LoaderButton from "../ui/LoaderButton";
 
 interface PostItemProps {
   id?: number;
   username?: string;
   image_url?: string;
-  text?: string ;
+  text?: string;
   total_likes?: number;
   total_replies?: number;
+  isUserSeeing?: boolean;
+  isUserLiked?: boolean;
 }
 
-const PostItem: React.FC<PostItemProps> = ({
+function PostItem({
   id,
   username,
   image_url,
   text,
   total_likes,
   total_replies,
-}) => {
-  const router = useRouter()
+  isUserSeeing,
+  isUserLiked,
+}: PostItemProps) {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedText, setEditedText] = useState<string | undefined>(text);
 
   const { deletePost } = useDeletePost();
   const { editPost } = useEditPost();
-  const { likePost } = useLikePost();
-  // const { unlikePost } = useUnlikePost();
+  const { likePost, isLoadingLike } = useLikePost();
+  const { unlikePost, isLoadingUnlike } = useUnlikePost();
 
   const { mutate: handleDeletePost, isPending: isLoadingDelete } = useMutation({
     mutationFn: async (id: number | undefined) => {
@@ -64,21 +74,21 @@ const PostItem: React.FC<PostItemProps> = ({
 
   const { mutate: handleLikePost } = useMutation({
     mutationFn: async (id: number | undefined) => {
-      await likePost(id)
+      await likePost(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
-  })
+  });
 
-  // const { mutate: handleUnlikePost } = useMutation({
-  //   mutationFn: async (id: number | undefined) => {
-  //     await unlikePost(id);
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["posts"] });
-  //   },
-  // })
+  const { mutate: handleUnlikePost } = useMutation({
+    mutationFn: async (id: number | undefined) => {
+      await unlikePost(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
 
   const handleSave = () => {
     handleEditPost({ id, text: editedText });
@@ -89,6 +99,7 @@ const PostItem: React.FC<PostItemProps> = ({
     setEditedText(text);
     setIsEditing(false);
   };
+
   return (
     <Box
       borderWidth="1px"
@@ -119,36 +130,88 @@ const PostItem: React.FC<PostItemProps> = ({
       <HStack mt={4} gap={4}>
         {isEditing ? (
           <>
-            <Button size="sm" onClick={handleSave}>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              px={4}
+              py={2}
+              borderRadius="md"
+              cursor="pointer"
+              _hover={{
+                color: "green.500",
+              }}
+            >
               Save
             </Button>
-            <Button size="sm" onClick={handleCancel}>
+            <Button
+              size="sm"
+              onClick={handleCancel}
+              px={4}
+              py={2}
+              borderRadius="md"
+              cursor="pointer"
+              _hover={{
+                color: "red.500",
+              }}
+            >
               Cancel
             </Button>
           </>
-        ) : isLoadingEdit || isLoadingDelete? (
+        ) : isLoadingEdit || isLoadingDelete ? (
           <Loader />
         ) : (
           <HStack gap={4} mx="auto">
-            <IconButton onClick={() => router.push(`/home/post/${id}`)} bgColor="transparent">
+            <IconButton
+              onClick={() => router.push(`/home/post/${id}`)}
+              bgColor="transparent"
+              aria-label="Comment"
+            >
               {total_replies}
               <MdComment />
             </IconButton>
-            <IconButton bgColor="transparent" onClick={() => handleLikePost(id)}>
-              {total_likes}
-              <FaRegHeart />
-            </IconButton>
-            <IconButton bgColor="transparent">
-              <FaEdit onClick={() => setIsEditing(true)} />
-            </IconButton>
-            <IconButton bgColor="transparent">
-              <MdDelete onClick={() => handleDeletePost(id)}></MdDelete>
-            </IconButton>
+
+            {isLoadingLike || isLoadingUnlike ? (
+              <LoaderButton />
+            ) : (
+              <IconButton
+                bgColor="transparent"
+                onClick={
+                  isUserLiked
+                    ? () => {
+                        handleUnlikePost(id);
+                      }
+                    : () => handleLikePost(id)
+                }
+                aria-label="Like"
+              >
+                {total_likes}
+                {isUserLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+              </IconButton>
+            )}
+
+            {isUserSeeing ? (
+              <>
+                <IconButton
+                  bgColor="transparent"
+                  onClick={() => setIsEditing(true)}
+                  aria-label="Edit"
+                >
+                  <FaEdit />
+                </IconButton>
+                <IconButton
+                  bgColor="transparent"
+                  onClick={() => handleDeletePost(id)}
+                  aria-label="Delete"
+                >
+                  <MdDelete />
+                </IconButton>
+              </>
+            ) : null}
           </HStack>
         )}
       </HStack>
     </Box>
   );
-};
+}
 
 export default PostItem;

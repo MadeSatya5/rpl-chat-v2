@@ -108,9 +108,11 @@ function Profile() {
           {isEditing ? (
             <form onSubmit={onSubmit}>
               <VStack gap={4} align="stretch">
+
                 <Text fontSize="2xl" fontWeight="bold" letterSpacing="tight">
                   {`@${profileData?.data.username}`}
                 </Text>
+
                 <Field.Root invalid={!!errors.name} required>
                   <Field.Label>Name</Field.Label>
                   <Input
@@ -120,6 +122,7 @@ function Profile() {
                   />
                   <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
                 </Field.Root >
+
                 <Field.Root invalid={!!errors.bio} required>
                   <Field.Label>Bio</Field.Label>
                   <Input
@@ -129,6 +132,7 @@ function Profile() {
                   />
                   <Field.ErrorText>{errors.bio?.message}</Field.ErrorText>
                 </Field.Root>
+
                 <Field.Root invalid={!!errors.image_url} required>
                   <Field.Label>Image</Field.Label>
                   <Input type="file" {...register("image_url", {required: true})} />
@@ -143,20 +147,19 @@ function Profile() {
                     borderRadius="md"
                     cursor="pointer"
                     _hover={{
-                      bg: "light",
                       color: "green.500",
                     }}
                     type="submit"
                   >
                     Save
                   </Button>
+
                   <Button
                     px={4}
                     py={2}
                     borderRadius="md"
                     cursor="pointer"
                     _hover={{
-                      bg: "light",
                       color: "red.500",
                     }}
                     onClick={() => setIsEditing(false)}

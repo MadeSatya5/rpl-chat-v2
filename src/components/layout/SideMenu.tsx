@@ -10,7 +10,6 @@ import {
 import Link from "next/link";
 import AvatarProfile from "../ui/AvatarProfile";
 import { FaHeart, FaHome } from "react-icons/fa";
-// import { IoMdNotificationsOutline } from "react-icons/io";
 import { ShowProfileResponse } from "@/types/profile";
 import MenuItem from "../ui/MenuItem";
 import { MdOutlineArticle } from "react-icons/md";
@@ -24,11 +23,6 @@ const menuItems = [
   { icon: FaHome, label: "Home", href: "/home" },
   { icon: MdOutlineArticle, label: "Your Posts", href: "/profile/post" },
   { icon: FaHeart, label: "Liked", href: "/profile/liked" },
-  // {
-  //   icon: IoMdNotificationsOutline,
-  //   label: "Notification",
-  //   href: "/notifications",
-  // },
 ];
 
 function SideMenu({ profileData }: SideMenuProps) {
@@ -80,8 +74,8 @@ function SideMenu({ profileData }: SideMenuProps) {
           <HStack
             gap={3}
             _hover={{
-              bg: "light",
-              transition: "background-color 0.3s ease",
+              bg: "gray.800",
+              transition: "background-color 0.2s ease",
             }}
             py="14px"
             px="30px"

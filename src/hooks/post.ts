@@ -138,8 +138,11 @@ export const useEditPost = () => {
 };
 
 export const useLikePost = () => {
+  const [isLoadingLike, setIsLoadingLike] = useState(false);
+
   const likePost = async(id: number | undefined) => {
     try {
+      setIsLoadingLike(true);
       const res = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/likes/${id}`,
         {},
         {
@@ -151,14 +154,19 @@ export const useLikePost = () => {
       console.log(res)
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoadingLike(false);
     }
   }
-  return { likePost }
+  return { likePost, isLoadingLike }
 }
 
 export const useUnlikePost = () => {
+  const [isLoadingUnlike, setIsLoadingUnlike] = useState(false);
+
   const unlikePost = async(id: number | undefined) => {
     try {
+      setIsLoadingUnlike(true);
       const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/api/likes/${id}`,
         {
           headers: {
@@ -169,7 +177,9 @@ export const useUnlikePost = () => {
       console.log(res)
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoadingUnlike(false);
     }
   }
-  return { unlikePost }
+  return { unlikePost, isLoadingUnlike }
 }

@@ -37,6 +37,7 @@ function LikedPosts() {
       <Feeds
         queryKey={["posts", username]}
         queryFn={({ pageParam }) => getPostUser(username, pageParam)}
+        isUserLiked={true}
         renderInput={
           <>
             <FeedsTabs />

@@ -9,12 +9,16 @@ import { GetPostResponse } from "@/types/post";
 interface FeedsProps {
   queryKey: (string | number | undefined)[];
   queryFn: ({ pageParam }: { pageParam: number }) => Promise<GetPostResponse>;
+  isUserSeeing?: boolean,
+  isUserLiked?: boolean,
   renderInput?: ReactNode;
 }
 
 function Feeds({
   queryKey,
   queryFn,
+  isUserSeeing,
+  isUserLiked,
   renderInput,
 }: FeedsProps) {
   const {
@@ -65,6 +69,8 @@ function Feeds({
                     text={post.text}
                     image_url={post.user.image_url}
                     total_likes={post.total_likes}
+                    isUserSeeing={isUserSeeing}
+                    isUserLiked={isUserLiked}
                   />
                 ) : null
               )

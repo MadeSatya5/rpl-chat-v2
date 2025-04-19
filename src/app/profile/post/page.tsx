@@ -37,6 +37,7 @@ function YourPosts() {
       <Feeds
         queryKey={["posts", username]}
         queryFn={({ pageParam }) => getPostUser(username, pageParam)}
+        isUserSeeing={true}
         renderInput={
           <>
             <FeedsTabs />

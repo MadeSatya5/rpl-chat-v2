@@ -15,7 +15,7 @@ export default function PostDetailPage() {
   const { id } = useParams();
   const { getPostById } = useGetPostById();
 
-  const { data: postData } = useQuery({
+  const { data: postData, refetch: refetchPost } = useQuery({
     queryKey: ["postById", id],
     queryFn: () => getPostById(Number(id)),
   });
@@ -56,6 +56,7 @@ export default function PostDetailPage() {
             username={profileData?.data.username}
             image_url={profileData?.data.image_url}
             parent_id={Number(id)}
+            onRefetch={refetchPost}
           />
 
           <Stack gap={3} pl={4}>

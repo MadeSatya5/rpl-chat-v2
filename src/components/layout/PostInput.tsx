@@ -7,10 +7,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import LoaderButton from "../ui/LoaderButton";
 
 interface PostInputProps extends AvatarProfileProps {
-  parent_id?: number
+  parent_id?: number,
+  onRefetch?: () => void,
 }
 
-function PostInput({ username, image_url, parent_id }: PostInputProps) {
+function PostInput({ username, image_url, parent_id, onRefetch }: PostInputProps) {
   const { register, handleSubmit, resetField } = useForm<CreatePostProps>();
   const queryClient = useQueryClient();
 
@@ -20,6 +21,9 @@ function PostInput({ username, image_url, parent_id }: PostInputProps) {
     mutationFn: createPost,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      if(onRefetch){
+        onRefetch();
+      }
     },
   });
 
