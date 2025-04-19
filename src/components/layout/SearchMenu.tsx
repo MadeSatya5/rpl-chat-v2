@@ -10,6 +10,7 @@ function SearchMenu() {
       position="sticky"
       top="0"
       overflowY="auto"
+      bgColor="#000000"
     >
       <SearchInput />
     </Container>

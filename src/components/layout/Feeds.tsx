@@ -1,35 +1,34 @@
 import { Center, Container, Stack } from "@chakra-ui/react";
-import FeedsTabs from "../ui/FeedsTabs";
-import PostInput from "./PostInput";
-import PostItem from "./PostItem";
-import { ShowProfileResponse } from "@/types/profile";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useGetPost } from "@/hooks/post";
-import { useEffect } from "react";
+import { useEffect, ReactNode } from "react";
+import PostItem from "./PostItem";
 import LoaderButton from "../ui/LoaderButton";
+import { GetPostResponse } from "@/types/post";
 
-interface MainFeedsProps {
-  profileData: ShowProfileResponse | null | undefined;
+interface FeedsProps {
+  queryKey: (string | number | undefined)[];
+  queryFn: ({ pageParam }: { pageParam: number }) => Promise<GetPostResponse>;
+  renderInput?: ReactNode;
 }
 
-function MainFeeds({ profileData }: MainFeedsProps) {
-  const { getPost } = useGetPost();
-
+function Feeds({
+  queryKey,
+  queryFn,
+  renderInput,
+}: FeedsProps) {
   const {
-    data: posts,
+    data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["posts"],
-    queryFn: async ({ pageParam = 1 }) => {
-      return await getPost(pageParam);
-    },
+    queryKey,
+    queryFn,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data.meta.page;
-      const maxPage = lastPage?.data.meta.max_page;
+      const currentPage = lastPage?.meta.page;
+      const maxPage = lastPage?.meta.max_page;
       return currentPage && currentPage < (maxPage ?? 0)
         ? currentPage + 1
         : undefined;
@@ -53,18 +52,14 @@ function MainFeeds({ profileData }: MainFeedsProps) {
         pr="40px"
         minH="100vh"
       >
-        <FeedsTabs />
-        <PostInput
-          username={profileData?.data.username}
-          image_url={profileData?.data.image_url}
-        />
+        {renderInput}
 
-        {posts?.pages.map((post, postIndex) =>
-          Array.isArray(post?.data.data)
-            ? post?.data.data.map((post) =>
+        {data?.pages.map((page, index) =>
+          Array.isArray(page?.data)
+            ? page.data.map((post) =>
                 !post.is_deleted ? (
                   <PostItem
-                    key={`${postIndex}-${post.id}`}
+                    key={`${index}-${post.id}`}
                     id={post.id}
                     username={post.user.username}
                     text={post.text}
@@ -78,16 +73,14 @@ function MainFeeds({ profileData }: MainFeedsProps) {
 
         <div ref={ref} />
 
-        {isFetchingNextPage ? (
-          <>
-            <Center p={50}>
-              <LoaderButton />
-            </Center>
-          </>
-        ) : null}
+        {isFetchingNextPage && (
+          <Center p={50}>
+            <LoaderButton />
+          </Center>
+        )}
       </Stack>
     </Container>
   );
 }
 
-export default MainFeeds;
+export default Feeds;

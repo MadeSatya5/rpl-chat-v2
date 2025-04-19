@@ -9,12 +9,12 @@ import {
 } from "@chakra-ui/react";
 import AvatarProfile from "../ui/AvatarProfile";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDeletePost, useEditPost, useLikePost, useUnlikePost } from "@/hooks/post";
+import { useDeletePost, useEditPost, useLikePost } from "@/hooks/post";
 import Loader from "../ui/LoaderButton";
 import { useState } from "react";
 import { EditPostProps } from "@/types/post";
 import { FaEdit, FaRegHeart } from "react-icons/fa";
-import { MdDelete, MdComment } from "react-icons/md";
+import { MdComment, MdDelete } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
 interface PostItemProps {
@@ -42,7 +42,7 @@ const PostItem: React.FC<PostItemProps> = ({
   const { deletePost } = useDeletePost();
   const { editPost } = useEditPost();
   const { likePost } = useLikePost();
-  const { unlikePost } = useUnlikePost();
+  // const { unlikePost } = useUnlikePost();
 
   const { mutate: handleDeletePost, isPending: isLoadingDelete } = useMutation({
     mutationFn: async (id: number | undefined) => {
@@ -71,14 +71,14 @@ const PostItem: React.FC<PostItemProps> = ({
     },
   })
 
-  const { mutate: handleUnlikePost } = useMutation({
-    mutationFn: async (id: number | undefined) => {
-      await unlikePost(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
-  })
+  // const { mutate: handleUnlikePost } = useMutation({
+  //   mutationFn: async (id: number | undefined) => {
+  //     await unlikePost(id);
+  //   },
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["posts"] });
+  //   },
+  // })
 
   const handleSave = () => {
     handleEditPost({ id, text: editedText });
@@ -93,7 +93,7 @@ const PostItem: React.FC<PostItemProps> = ({
     <Box
       borderWidth="1px"
       borderRadius="lg"
-      borderColor="light"
+      borderColor="gray.700"
       p={4}
       shadow="sm"
       _hover={{ boxShadow: "md" }}
@@ -126,11 +126,11 @@ const PostItem: React.FC<PostItemProps> = ({
               Cancel
             </Button>
           </>
-        ) : isLoadingEdit || isLoadingDelete ? (
+        ) : isLoadingEdit || isLoadingDelete? (
           <Loader />
         ) : (
           <HStack gap={4} mx="auto">
-            <IconButton onClick={() => router.push(`/post/${id}`)} bgColor="transparent">
+            <IconButton onClick={() => router.push(`/home/post/${id}`)} bgColor="transparent">
               {total_replies}
               <MdComment />
             </IconButton>
@@ -138,12 +138,12 @@ const PostItem: React.FC<PostItemProps> = ({
               {total_likes}
               <FaRegHeart />
             </IconButton>
-            {/* <IconButton bgColor="transparent">
+            <IconButton bgColor="transparent">
               <FaEdit onClick={() => setIsEditing(true)} />
             </IconButton>
             <IconButton bgColor="transparent">
               <MdDelete onClick={() => handleDeletePost(id)}></MdDelete>
-            </IconButton> */}
+            </IconButton>
           </HStack>
         )}
       </HStack>

@@ -7,6 +7,7 @@ import {
 } from "@/types/post";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 const accessToken = getCookie("accessToken");
@@ -52,6 +53,28 @@ export const useGetPost = () => {
   return { getPost };
 };
 
+export const useGetPostUser = (liked?: boolean | undefined) => {
+  const [isLoadingGetPostUser, setIsLoadingGetPostUser] = useState(false);
+
+  const getPostUser = async (username: string | undefined, page: number) => {
+    try {
+      setIsLoadingGetPostUser(true);
+      const res = await axios.get<GetPostResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${username}/posts?page=${page}&per_page=10${liked ? "&is_liked=true": ""}`
+      );
+      console.log(username, page)
+      console.log(res.data)
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to fetch posts");
+    } finally {
+      setIsLoadingGetPostUser(false);
+    }
+  };
+
+  return { getPostUser, isLoadingGetPostUser };
+};
 
 export const useGetPostById = () => {
   const getPostById = async (postId: number, page = 1, perPage = 10) => {

@@ -3,7 +3,7 @@
 import AvatarProfile from "@/components/ui/AvatarProfile";
 import LoaderPage from "@/components/ui/LoaderPage";
 import { useEditProfile, useShowProfile } from "@/hooks/profile";
-import type { ShowProfileResponse } from "@/types/profile";
+import { EditProfileProps } from "@/types/profile";
 import {
   Center,
   Text,
@@ -14,49 +14,65 @@ import {
   Input,
   Field,
   HStack,
+  Button,
 } from "@chakra-ui/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaEdit } from "react-icons/fa";
 
 function Profile() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [profileData, setProfileData] = useState<
-    ShowProfileResponse | null | undefined
-  >(null);
-
-  const [editedName, setEditedName] = useState(profileData?.data.name);
-  const [editedBio, setEditedBio] = useState(profileData?.data.bio);
-  const [editedImage, setEditedImage] = useState(profileData?.data.image_url);
-
   const { showProfile, isLoadingShowProfile } = useShowProfile();
-  const { editProfile, isLoadingEditProfile } = useEditProfile();
 
   const usernameFromCookie = getCookie("username");
   const username: string =
     typeof usernameFromCookie === "string" ? usernameFromCookie : "Guest";
 
-  async function fetchProfile() {
-    const res = await showProfile({ username });
-    console.log(res);
-    setProfileData(res);
-  }
+  const { register, handleSubmit, setValue , formState: { errors } } = useForm<EditProfileProps>();
 
-  async function handleEditProfile() {
-    const res = await editProfile({
-      name: editedName,
-      bio: editedBio,
-      image_url: editedImage,
+  const { editProfile } = useEditProfile();
+
+  const { data: profileData } = useQuery({
+    queryKey: ["profileData"],
+    queryFn: async () => {
+      return await showProfile({ username });
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutate: handleEditName } = useMutation({
+    mutationFn: async ({ name, bio, image_url }: EditProfileProps) => {
+      await editProfile({ name, bio, image_url });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profileData"] });
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    if(!data.image_url) return;
+    handleEditName({
+      name: data.name,
+      bio: data.bio,
+      image_url: data.image_url,
     });
-    console.log(res);
     setIsEditing(false);
-  }
+  });
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    if (profileData) {
+      setValue("name", profileData.data.name);
+      setValue("bio", profileData.data.bio);
+    }
+  }, [profileData, setValue]);
 
-  return isLoadingShowProfile || isLoadingEditProfile? (
+  return isLoadingShowProfile ? (
     <LoaderPage />
   ) : (
     <Center minH="100vh" px={4}>
@@ -90,64 +106,66 @@ function Profile() {
           </Box>
 
           {isEditing ? (
-            <>
-              <Text fontSize="2xl" fontWeight="bold" letterSpacing="tight">
-                {`@${profileData?.data.username}`}
-              </Text>
-              <Field.Root>
-                <Field.Label>Name</Field.Label>
-                <Input
-                  value={editedName}
-                  placeholder="name"
-                  onChange={(e) => setEditedName(e.target.value)}
-                />
-              </Field.Root>
-              <Field.Root>
-                <Field.Label>Bio</Field.Label>
-                <Input
-                  value={editedBio}
-                  placeholder="bio"
-                  onChange={(e) => setEditedBio(e.target.value)}
-                />
-              </Field.Root>
-              <Field.Root>
-                <Field.Label>Image</Field.Label>
-                <Input
-                  value={editedImage}
-                  placeholder="image"
-                  onChange={(e) => setEditedImage(e.target.value)}
-                />
-              </Field.Root>
-              {/* Action Button */}
-              <HStack gap={20}>
-                <Text
-                  px={4}
-                  py={2}
-                  borderRadius="md"
-                  cursor="pointer"
-                  _hover={{
-                    bg: "light",
-                    color: "green.500",
-                  }}
-                  onClick={handleEditProfile}
-                >
-                  Save
+            <form onSubmit={onSubmit}>
+              <VStack gap={4} align="stretch">
+                <Text fontSize="2xl" fontWeight="bold" letterSpacing="tight">
+                  {`@${profileData?.data.username}`}
                 </Text>
-                <Text
-                  px={4}
-                  py={2}
-                  borderRadius="md"
-                  cursor="pointer"
-                  _hover={{
-                    bg: "light",
-                    color: "red.500",
-                  }}
-                  onClick={() => setIsEditing(false)}
-                >
-                  Cancel
-                </Text>
-              </HStack>
-            </>
+                <Field.Root invalid={!!errors.name} required>
+                  <Field.Label>Name</Field.Label>
+                  <Input
+                    placeholder="name"
+                    {...register("name", { required: true })}
+                    autoComplete="off"
+                  />
+                  <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
+                </Field.Root >
+                <Field.Root invalid={!!errors.bio} required>
+                  <Field.Label>Bio</Field.Label>
+                  <Input
+                    placeholder="bio"
+                    {...register("bio", { required: true })}
+                    autoComplete="off"
+                  />
+                  <Field.ErrorText>{errors.bio?.message}</Field.ErrorText>
+                </Field.Root>
+                <Field.Root invalid={!!errors.image_url} required>
+                  <Field.Label>Image</Field.Label>
+                  <Input type="file" {...register("image_url", {required: true})} />
+                  <Field.ErrorText>{errors.image_url?.message}</Field.ErrorText>
+                </Field.Root>
+
+                {/* Action Button */}
+                <HStack gap={20}>
+                  <Button
+                    px={4}
+                    py={2}
+                    borderRadius="md"
+                    cursor="pointer"
+                    _hover={{
+                      bg: "light",
+                      color: "green.500",
+                    }}
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    px={4}
+                    py={2}
+                    borderRadius="md"
+                    cursor="pointer"
+                    _hover={{
+                      bg: "light",
+                      color: "red.500",
+                    }}
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Cancel
+                  </Button>
+                </HStack>
+              </VStack>
+            </form>
           ) : (
             <>
               <Stack gap={1} pt={2}>
@@ -178,6 +196,7 @@ function Profile() {
                 <FaEdit />
                 Edit Profile
               </IconButton>
+              <Button bgColor="red.800" onClick={() => router.push("/login")}>Log Out</Button>
             </>
           )}
         </VStack>

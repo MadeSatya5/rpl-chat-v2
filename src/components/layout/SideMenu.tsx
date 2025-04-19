@@ -1,3 +1,4 @@
+"use client"
 import {
   Container,
   Heading,
@@ -8,17 +9,30 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import AvatarProfile from "../ui/AvatarProfile";
-import {  FaHome, FaSearch } from "react-icons/fa";
-import { IoMdNotificationsOutline } from "react-icons/io";
+import { FaHeart, FaHome } from "react-icons/fa";
+// import { IoMdNotificationsOutline } from "react-icons/io";
 import { ShowProfileResponse } from "@/types/profile";
 import MenuItem from "../ui/MenuItem";
 import { MdOutlineArticle } from "react-icons/md";
+import { usePathname } from "next/navigation";
 
 interface SideMenuProps {
-    profileData?: ShowProfileResponse | null;
-  }
+  profileData?: ShowProfileResponse | null;
+}
 
-function SideMenu({profileData} : SideMenuProps) {
+const menuItems = [
+  { icon: FaHome, label: "Home", href: "/home" },
+  { icon: MdOutlineArticle, label: "Your Posts", href: "/profile/post" },
+  { icon: FaHeart, label: "Liked", href: "/profile/liked" },
+  // {
+  //   icon: IoMdNotificationsOutline,
+  //   label: "Notification",
+  //   href: "/notifications",
+  // },
+];
+
+function SideMenu({ profileData }: SideMenuProps) {
+  const pathname = usePathname();
 
   return (
     <Container
@@ -32,19 +46,36 @@ function SideMenu({profileData} : SideMenuProps) {
       <Stack
         gap={3}
         borderRight="1px solid"
-        borderColor="light"
+        borderColor="gray.800"
         w="fit-content"
         pr="40px"
         minH="100vh"
       >
-        <Heading size="4xl" py="14px" px="30px">
-          Bunshin
-        </Heading>
-        <MenuItem icon={FaHome} label="Home" />
-        <MenuItem icon={MdOutlineArticle} label="Your Posts" />
-        <MenuItem icon={FaSearch} label="Search" />
-        <MenuItem icon={IoMdNotificationsOutline} label="Notification" />
+        <Link href="/home">
+          <Heading size="4xl" py="14px" px="30px">
+            Bunshin
+          </Heading>
+        </Link>
+
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(item.href);
+          return (
+            <Link
+              href={item.href}
+              key={item.label}
+              style={{ textDecoration: "none" }}
+            >
+              <MenuItem
+                icon={item.icon}
+                label={item.label}
+                bgColor={isActive ? "gray.700" : ""}
+              />
+            </Link>
+          );
+        })}
+
         <Spacer flexBasis={10} />
+
         <Link href="/profile">
           <HStack
             gap={3}

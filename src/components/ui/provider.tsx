@@ -13,9 +13,9 @@ type Props = {
 const config = defineConfig({
   theme: {
     tokens: {
-      colors: {
-        light: { value: "#2F2F2F" },
-      },
+      // colors: {
+      //   light: { value: "#2F2F2F" },
+      // },
       fonts: {
         body: { value: `'Bricolage Grotesque', sans-serif` },
       },

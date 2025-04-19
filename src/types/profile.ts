@@ -17,7 +17,7 @@ export interface ShowProfileResponse {
 export interface EditProfileProps {
   name: string | undefined,
   bio?: string | number | readonly string[],
-  image_url?: null | File | string
+  image_url?: null | FileList | string
 }
 
 export interface EditProfileResponse {

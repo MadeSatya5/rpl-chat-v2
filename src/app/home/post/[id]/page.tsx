@@ -9,18 +9,11 @@ import SideMenu from "@/components/layout/SideMenu";
 import SearchMenu from "@/components/layout/SearchMenu";
 import { useShowProfile } from "@/hooks/profile";
 import { getCookie } from "cookies-next";
-import { ShowProfileResponse } from "@/types/profile";
-import { useEffect, useState } from "react";
 import LoaderPage from "@/components/ui/LoaderPage";
 
 export default function PostDetailPage() {
-  const [profileData, setProfileData] = useState<
-    ShowProfileResponse | null | undefined
-  >(null);
   const { id } = useParams();
   const { getPostById } = useGetPostById();
-
-  const [isLoading, setIsLoading] = useState(true);
 
   const { data: postData } = useQuery({
     queryKey: ["postById", id],
@@ -33,19 +26,13 @@ export default function PostDetailPage() {
 
   const { showProfile } = useShowProfile();
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const result = await showProfile({ username });
-        setProfileData(result);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    };
-    loadProfile();
-  }, []);
+  const { data: profileData, isLoading } = useQuery({
+      queryKey: ["profileData"],
+      queryFn: async () => {
+        return await showProfile({ username });
+      },
+      refetchOnWindowFocus: false,
+    });
 
   const post = postData?.data;
 
@@ -61,9 +48,15 @@ export default function PostDetailPage() {
             username={post?.user.username}
             text={post?.text}
             image_url={post?.user.image_url}
+            total_likes={post?.total_likes}
+            total_replies={post?.replies.length}
           />
 
-          <PostInput parent_id={Number(id)} />
+          <PostInput
+            username={profileData?.data.username}
+            image_url={profileData?.data.image_url}
+            parent_id={Number(id)}
+          />
 
           <Stack gap={3} pl={4}>
             {post?.replies.map((reply) => (
@@ -73,8 +66,6 @@ export default function PostDetailPage() {
                 username={reply.user.username}
                 text={reply.text}
                 image_url={reply.user.image_url}
-                total_likes={reply.total_likes}
-                // total_replies={reply.user.}
               />
             ))}
           </Stack>

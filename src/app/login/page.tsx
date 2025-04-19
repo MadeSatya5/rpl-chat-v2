@@ -16,6 +16,8 @@ import { LoginProps } from "@/types/form";
 import { useLogin } from "@/hooks/auth";
 import NextLink from "next/link";
 import LoaderButton from "@/components/ui/LoaderButton";
+import { deleteCookie } from "cookies-next";
+import { useEffect } from "react";
 
 function Login() {
   const {
@@ -29,6 +31,11 @@ function Login() {
   const onSubmit = handleSubmit(async (data) => {
     login(data);
   });
+
+  useEffect(() => {
+    deleteCookie("accessToken");
+    deleteCookie("username");
+  }, [])
 
   return (
     <Center minH="100vh">
@@ -66,7 +73,7 @@ function Login() {
             <Text>
               Don&apos;t have an account? Register{" "}
               <ChakraLink color="blue.500" textDecoration="underline">
-                <NextLink href="/register">here</NextLink>
+                <NextLink href="/register"><Text color="blue.500" textDecoration="underline">here</Text></NextLink>
               </ChakraLink>
             </Text>
           </Field.Root>

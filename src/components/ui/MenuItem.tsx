@@ -1,14 +1,15 @@
 import { HStack, Icon, Text } from "@chakra-ui/react";
 import { MenuItemProps } from "@/types/menu";
 
-function MenuItem({ icon, label, width }: MenuItemProps) {
+function MenuItem({ icon, label, width, bgColor }: MenuItemProps) {
   return (
     <HStack
-      _hover={{ bg: "light", transition: "background-color 0.3s ease" }}
+      _hover={{ bg: "gray.800", transition: "background-color 0.2s ease" }}
       py="14px"
       px="30px"
       borderRadius="2xl"
       width={width}
+      bgColor={bgColor}
     >
       <Icon as={icon} fontSize="20px" />
       <Text fontWeight="bold" fontSize="20px">

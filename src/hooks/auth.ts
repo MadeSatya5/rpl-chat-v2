@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 export const useLogin = () => {
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
   const [isErrorLogin, setIsErrorLogin] = useState(false);
-  
+
   const router = useRouter();
 
   const login = async (data: LoginProps) => {
@@ -25,6 +25,10 @@ export const useLogin = () => {
         }
       );
       console.log(res.data);
+
+      deleteCookie("accessToken"); // delete old cookies
+      deleteCookie("username");
+
       setCookie("accessToken", res.data.data.token);
       setCookie("username", data.username);
 

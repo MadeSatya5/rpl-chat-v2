@@ -8,7 +8,7 @@ function FeedsTabs() {
       pb="2"
       position="sticky"
       top="0"
-      bgColor="black"
+      bgColor="#000000"
       zIndex={1000}
     >
       <Text

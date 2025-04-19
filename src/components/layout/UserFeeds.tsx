@@ -5,16 +5,17 @@ import PostItem from "./PostItem";
 import { ShowProfileResponse } from "@/types/profile";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useGetPost } from "@/hooks/post";
+import { useGetPostUser } from "@/hooks/post";
 import { useEffect } from "react";
 import LoaderButton from "../ui/LoaderButton";
 
-interface MainFeedsProps {
+interface UserFeedsProps {
+  username?: string;
   profileData: ShowProfileResponse | null | undefined;
 }
 
-function MainFeeds({ profileData }: MainFeedsProps) {
-  const { getPost } = useGetPost();
+function UserFeeds({ username, profileData }: UserFeedsProps) {
+  const { getPostUser } = useGetPostUser();
 
   const {
     data: posts,
@@ -24,12 +25,12 @@ function MainFeeds({ profileData }: MainFeedsProps) {
   } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => {
-      return await getPost(pageParam);
+      return await getPostUser(username, pageParam);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage?.data.meta.page;
-      const maxPage = lastPage?.data.meta.max_page;
+      const currentPage = lastPage?.meta.page;
+      const maxPage = lastPage?.meta.max_page;
       return currentPage && currentPage < (maxPage ?? 0)
         ? currentPage + 1
         : undefined;
@@ -60,8 +61,8 @@ function MainFeeds({ profileData }: MainFeedsProps) {
         />
 
         {posts?.pages.map((post, postIndex) =>
-          Array.isArray(post?.data.data)
-            ? post?.data.data.map((post) =>
+          Array.isArray(post?.data)
+            ? post.data.map((post) =>
                 !post.is_deleted ? (
                   <PostItem
                     key={`${postIndex}-${post.id}`}
@@ -90,4 +91,4 @@ function MainFeeds({ profileData }: MainFeedsProps) {
   );
 }
 
-export default MainFeeds;
+export default UserFeeds;
