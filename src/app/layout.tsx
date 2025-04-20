@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/uzumakibg-removebg-preview.png"/>
+        <link rel="icon" href="/uzumakibg.png"/>
       </head>
       <body>
         <Toaster />
