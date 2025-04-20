@@ -1,6 +1,7 @@
 "use client";
 
 import LoaderButton from "@/components/ui/LoaderButton";
+import Logo from "@/components/ui/Logo";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useCheckUsername, useRegister } from "@/hooks/auth";
 import { RegisterProps } from "@/types/form";
@@ -37,7 +38,8 @@ function Register() {
   });
 
   return (
-    <Center minH="100vh">
+    <Center minH="100vh" gap={300}>
+      <Logo />
       <form
         onSubmit={onSubmit}
         className="flex justify-center items-center min-h-screen "

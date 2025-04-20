@@ -18,6 +18,7 @@ import NextLink from "next/link";
 import LoaderButton from "@/components/ui/LoaderButton";
 import { deleteCookie } from "cookies-next";
 import { useEffect } from "react";
+import Logo from "@/components/ui/Logo";
 
 function Login() {
   const {
@@ -38,7 +39,8 @@ function Login() {
   }, [])
 
   return (
-    <Center minH="100vh">
+    <Center minH="100vh" gap={300}>
+      <Logo />
       <form
         onSubmit={onSubmit}
         className="flex justify-center items-center min-h-screen "

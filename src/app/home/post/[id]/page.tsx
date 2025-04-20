@@ -6,10 +6,10 @@ import PostItem from "@/components/layout/PostItem";
 import PostInput from "@/components/layout/PostInput";
 import { useQuery } from "@tanstack/react-query";
 import SideMenu from "@/components/layout/SideMenu";
-import SearchMenu from "@/components/layout/SearchMenu";
 import { useShowProfile } from "@/hooks/profile";
 import { getCookie } from "cookies-next";
 import LoaderPage from "@/components/ui/LoaderPage";
+import PathInfo from "@/components/ui/PathInfo";
 
 export default function PostDetailPage() {
   const { id } = useParams();
@@ -27,12 +27,12 @@ export default function PostDetailPage() {
   const { showProfile } = useShowProfile();
 
   const { data: profileData, isLoading } = useQuery({
-      queryKey: ["profileData"],
-      queryFn: async () => {
-        return await showProfile({ username });
-      },
-      refetchOnWindowFocus: false,
-    });
+    queryKey: ["profileData"],
+    queryFn: async () => {
+      return await showProfile({ username });
+    },
+    refetchOnWindowFocus: false,
+  });
 
   const post = postData?.data;
 
@@ -42,7 +42,14 @@ export default function PostDetailPage() {
     <HStack maxW="1250px" mx="auto" align="start" pt={3}>
       <SideMenu profileData={profileData} />
       <Container maxW="700px" px={4} pt={10}>
-        <Stack gap={6} py={6}>
+        <Stack
+          gap={6}
+          py={6}
+          borderRight="1px solid"
+          borderColor="gray.700"
+          pr="40px"
+          minH="100vh"
+        >
           <PostItem
             id={post?.id}
             username={post?.user.username}
@@ -73,7 +80,7 @@ export default function PostDetailPage() {
         </Stack>
       </Container>
 
-      <SearchMenu />
+      <PathInfo text="Post Replies"/>
     </HStack>
   );
 }

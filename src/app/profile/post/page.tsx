@@ -2,10 +2,10 @@
 
 import Feeds from "@/components/layout/Feeds";
 import PostInput from "@/components/layout/PostInput";
-import SearchMenu from "@/components/layout/SearchMenu";
 import SideMenu from "@/components/layout/SideMenu";
 import FeedsTabs from "@/components/ui/FeedsTabs";
 import LoaderPage from "@/components/ui/LoaderPage";
+import PathInfo from "@/components/ui/PathInfo";
 import { useGetPostUser } from "@/hooks/post";
 import { useShowProfile } from "@/hooks/profile";
 import { Box, HStack } from "@chakra-ui/react";
@@ -50,7 +50,8 @@ function YourPosts() {
       />
 
       <Box />
-      <SearchMenu />
+
+      <PathInfo text="Your Posts"/>
     </HStack>
   );
 }

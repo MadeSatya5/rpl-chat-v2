@@ -30,7 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" >
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/uzumakibg-removebg-preview.png"/>
+      </head>
       <body>
         <Toaster />
         <Provider>{children}</Provider>

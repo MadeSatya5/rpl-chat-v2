@@ -1,7 +1,6 @@
 "use client"
 import {
   Container,
-  Heading,
   HStack,
   Spacer,
   Stack,
@@ -14,6 +13,7 @@ import { ShowProfileResponse } from "@/types/profile";
 import MenuItem from "../ui/MenuItem";
 import { MdOutlineArticle } from "react-icons/md";
 import { usePathname } from "next/navigation";
+import Logo from "../ui/Logo";
 
 interface SideMenuProps {
   profileData?: ShowProfileResponse | null;
@@ -46,9 +46,7 @@ function SideMenu({ profileData }: SideMenuProps) {
         minH="100vh"
       >
         <Link href="/home">
-          <Heading size="4xl" py="14px" px="30px">
-            Bunshin
-          </Heading>
+          <Logo />
         </Link>
 
         {menuItems.map((item) => {
