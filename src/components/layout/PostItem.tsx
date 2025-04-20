@@ -109,7 +109,11 @@ function PostItem({
       shadow="sm"
       _hover={{ boxShadow: "md" }}
     >
-      <HStack gap={4}>
+      <HStack
+        gap={4}
+        onClick={() => router.push(`/profile/${username}`)}
+        _hover={{ cursor: "pointer" }}
+      >
         <AvatarProfile username={username} image_url={image_url} />
         <Stack gap={0}>
           <Text fontWeight="bold">{username}</Text>

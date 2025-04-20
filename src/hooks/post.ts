@@ -44,9 +44,10 @@ export const useGetPost = () => {
       const res = await axios.get<GetPostResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/post?page=${page}&per_page=10`
       );
-      return res;
+      return res.data;
     } catch (error) {
       console.log(error);
+      throw new Error("Failed to fetch posts");
     }
   };
 
