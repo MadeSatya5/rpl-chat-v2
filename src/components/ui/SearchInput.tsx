@@ -1,10 +1,22 @@
 import { Input, InputGroup } from "@chakra-ui/react";
-import { LuSearch } from "react-icons/lu";
+import { ChangeEvent } from "react";
 
-function SearchInput() {
+interface SearchInputProps {
+  onSearch?: (keywords: string) => void;
+}
+
+function SearchInput({ onSearch }: SearchInputProps) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onSearch?.(e.target.value);
+  };
+
   return (
-    <InputGroup flex="1" startElement={<LuSearch />} >
-      <Input placeholder="Search..." variant="flushed"/>
+    <InputGroup flex="1">
+      <Input
+        placeholder="Search..."
+        variant="flushed"
+        onChange={handleChange}
+      />
     </InputGroup>
   );
 }

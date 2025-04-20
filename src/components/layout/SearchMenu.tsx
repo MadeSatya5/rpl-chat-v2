@@ -1,7 +1,11 @@
 import { Container } from "@chakra-ui/react";
 import SearchInput from "../ui/SearchInput";
 
-function SearchMenu() {
+interface SearchMenuProps {
+  onSearch?: (keywords: string) => void;
+};
+
+function SearchMenu({onSearch} : SearchMenuProps) {
   return (
     <Container
       px="4"
@@ -12,7 +16,7 @@ function SearchMenu() {
       overflowY="auto"
       bgColor="#000000"
     >
-      <SearchInput />
+      <SearchInput onSearch={onSearch}/>
     </Container>
   );
 }

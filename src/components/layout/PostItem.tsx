@@ -170,7 +170,7 @@ function PostItem({
               bgColor="transparent"
               aria-label="Comment"
             >
-              {total_replies}
+              {total_replies ? total_replies : 0}
               <MdComment />
             </IconButton>
 

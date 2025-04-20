@@ -8,7 +8,7 @@ import FeedsTabs from "@/components/ui/FeedsTabs";
 import LoaderPage from "@/components/ui/LoaderPage";
 import { useGetPostUser } from "@/hooks/post";
 import { useShowProfile } from "@/hooks/profile";
-import { HStack } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
 
@@ -49,6 +49,7 @@ function YourPosts() {
         }
       />
 
+      <Box />
       <SearchMenu />
     </HStack>
   );

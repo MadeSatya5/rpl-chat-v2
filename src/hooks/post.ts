@@ -28,7 +28,6 @@ export const useCreatePost = () => {
           },
         }
       );
-      console.log(res.data);
       return res;
     } catch (error) {
       console.log(error);
@@ -38,11 +37,11 @@ export const useCreatePost = () => {
   return { createPost };
 };
 
-export const useGetPost = () => {
+export const useGetPost = ({ keywords }: { keywords?: string } = {}) => {
   const getPost = async (page: number) => {
     try {
       const res = await axios.get<GetPostResponse>(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post?page=${page}&per_page=10`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/post?page=${page}&per_page=10${keywords? `&search=${keywords}` : ""}`
       );
       return res.data;
     } catch (error) {
@@ -63,8 +62,6 @@ export const useGetPostUser = (liked?: boolean | undefined) => {
       const res = await axios.get<GetPostResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${username}/posts?page=${page}&per_page=10${liked ? "&is_liked=true": ""}`
       );
-      console.log(username, page)
-      console.log(res.data)
       return res.data;
     } catch (error) {
       console.log(error);
@@ -82,6 +79,21 @@ export const useGetPostById = () => {
     try {
       const res = await axios.get<GetPostByIdResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${postId}?page=${page}&per_page=${perPage}`
+      );
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return { getPostById };
+};
+
+export const useGetPostBySearch = () => {
+  const getPostById = async (username: string, searchText: string) => {
+    try {
+      const res = await axios.get<GetPostByIdResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${username}?page=1&per_page=10&search=${searchText}`
       );
       return res.data;
     } catch (error) {

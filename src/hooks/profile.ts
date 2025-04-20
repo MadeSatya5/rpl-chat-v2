@@ -19,7 +19,6 @@ export const useShowProfile = () => {
       const res = await axios.get<ShowProfileResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${data.username}`
       );
-      console.log(res);
       return res.data;
     } catch (error) {
       console.error(error);
